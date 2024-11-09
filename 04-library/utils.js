@@ -12,6 +12,13 @@ function resText(res, data) {
     res.end(data);
 }
 
+// Funzione per inviare una risposta in formato Html
+function resHtml(res, data) {
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(data);
+}
+
 // Funzione per determinare i tipi di contenuto accettati dal client
 function getAcceptedTypes(req) {
     // Ottiene il valore dell'header "Accept" o, se non specificato imposta "*/*"
@@ -33,4 +40,4 @@ function getAcceptedTypes(req) {
 }
 
 // Esporta le funzioni per poterle utilizzare in altri moduli
-module.exports = { resJson, resText, getAcceptedTypes };
+module.exports = { resJson, resText, resHtml, getAcceptedTypes };
