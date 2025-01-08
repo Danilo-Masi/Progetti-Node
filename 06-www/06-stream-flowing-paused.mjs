@@ -1,7 +1,7 @@
 // Importa il modulo `fs/promises` per operazioni asincrone sui file
 import fs from "fs/promises";
 
-// Apre il file specificato in modalità di nsola lettura e ottine e un file handler (fh)
+// Apre il file specificato in modalità di sola lettura e ottiene un file handler (fh)
 const fh = await fs.open("06-stream-flowing-paused.mjs");
 
 // Crea un flusso di lettura dal file aperto
