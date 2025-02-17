@@ -16,7 +16,7 @@ server.on("request", async (req, res) => {
         res.statusCode = 405;
         res.end();
         return;
-    }
+    } 
 
     const { pathname } = new URL(req.url, `http://${req.headers.host}`);
     const file = `${root}${pathname}`;
