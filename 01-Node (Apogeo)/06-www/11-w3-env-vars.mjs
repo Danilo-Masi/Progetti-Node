@@ -4,14 +4,20 @@ import mimeMap from "./media-types.mjs";
 import { extname } from "path";
 import { log } from "./logger.mjs";
 import { createGzip } from "zlib";
+import { hrtime } from "process";
+import { exitIfNotDir } from "./w3-utils.mjs";
 
-const host = "127.0.0.1";
-const port = 3000;
-const root = "files";
+// Impostazioni delle variabili d'ambiente
+const host = process.env.WEB_HOST || "127.0.0.1";
+const port = process.env.WEB_PORT || 3000;
+const root = process.env.WEB_ROOT || "files";
 
-const server = http.createServer();
+// Controlliamo se root è una cartella o no
+await exitIfNotDir(root);
 
-server.on("request", async (req, res) => {
+const server = http.createServer(async (req, res) => {
+    const startTime = hrtime.bigint();
+
     const [isGET, isHEAD] = [req.method === "GET", req.method === "HEAD"];
     if (!isGET && !isHEAD) {
         res.statusCode = 405;
@@ -22,14 +28,21 @@ server.on("request", async (req, res) => {
     const { pathname } = new URL(req.url, `http://${req.headers.host}`);
     const file = `${root}${pathname}`;
 
-    log(`Requested ${file} file`);
+    res.on("finish", () => {
+        const endTime = hrtime.bigint();
+        const duration = (endTime - startTime) / BigInt(1e6);
+        const timestamp = new Date().toISOString();
+        const ip = req.socket.remoteAddress;
+        const httpDetails = `"${req.method} ${pathname}" ${res.statusCode}`;
+        log(`${ip} - ${timestamp} - ${httpDetails} - ${duration}ms`);
+    });
 
     let fh;
     try {
         fh = await fs.open(file);
     } catch (error) {
         console.error(error);
-        req.statusCode = 404;
+        res.statusCode = 404; 
         res.end();
         return;
     }
@@ -56,7 +69,8 @@ server.on("request", async (req, res) => {
         fileStream.destroy();
         gzipTransform.destroy();
         res.statusCode = 500;
-    }
+        res.end();
+    };
     fileStream
         .on("error", handleStreamError)
         .pipe(gzipTransform)
@@ -65,5 +79,5 @@ server.on("request", async (req, res) => {
 });
 
 server.listen(port, host, () => {
-    console.log(`Web server running at http:;//${host}:${port}/`);
+    console.log(`Web server running at http://${host}:${port}/`);
 });

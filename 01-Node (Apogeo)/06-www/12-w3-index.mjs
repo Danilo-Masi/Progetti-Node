@@ -1,17 +1,23 @@
 import http from "http";
-import fs from "fs/promises";
 import mimeMap from "./media-types.mjs";
 import { extname } from "path";
 import { log } from "./logger.mjs";
 import { createGzip } from "zlib";
+import { hrtime } from "process";
+import { exitIfNotDir, isStringTrue, tryOpenFile, generateLogString } from "./w3-utils.mjs";
 
-const host = "127.0.0.1";
-const port = 3000;
-const root = "files";
 
-const server = http.createServer();
+const host = process.env.WEB_HOST || "127.0.0.1";
+const port = process.env.WEB_PORT || 3000;
+const root = process.env.WEB_ROOT || "files";
+// Verifichiamo se la variabile d'ambiente ha proprio valore true
+const index = isStringTrue(process.env.WEB_INDEX) || false;
 
-server.on("request", async (req, res) => {
+await exitIfNotDir(root);
+
+const server = http.createServer(async (req, res) => {
+    const startTime = hrtime.bigint();
+
     const [isGET, isHEAD] = [req.method === "GET", req.method === "HEAD"];
     if (!isGET && !isHEAD) {
         res.statusCode = 405;
@@ -20,16 +26,16 @@ server.on("request", async (req, res) => {
     }
 
     const { pathname } = new URL(req.url, `http://${req.headers.host}`);
-    const file = `${root}${pathname}`;
 
-    log(`Requested ${file} file`);
+    const localPath = `${root}${pathname}`;
 
-    let fh;
-    try {
-        fh = await fs.open(file);
-    } catch (error) {
-        console.error(error);
-        req.statusCode = 404;
+    res.on("finish", () => {
+        log(generateLogString(req, res, pathname, startTime));
+    });
+
+    const { found, fh, fileStat } = await tryOpenFile(localPath, index);
+    if (!found) {
+        res.statusCode = 404;
         res.end();
         return;
     }
@@ -56,7 +62,8 @@ server.on("request", async (req, res) => {
         fileStream.destroy();
         gzipTransform.destroy();
         res.statusCode = 500;
-    }
+        res.end(); 
+    };
     fileStream
         .on("error", handleStreamError)
         .pipe(gzipTransform)
@@ -65,5 +72,5 @@ server.on("request", async (req, res) => {
 });
 
 server.listen(port, host, () => {
-    console.log(`Web server running at http:;//${host}:${port}/`);
+    console.log(`Web server running at http://${host}:${port}/`);
 });

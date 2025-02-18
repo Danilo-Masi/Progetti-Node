@@ -57,8 +57,8 @@ server.on("request", async (req, res) => {
         res.statusCode = 500;
         res.end();
     });
+});
 
-    server.listen(port, host, () => {
-        console.log(`Web server running at http:;//${host}:${port}/`);
-    })
+server.listen(port, host, () => {
+    console.log(`Web server running at http:;//${host}:${port}/`);
 });
