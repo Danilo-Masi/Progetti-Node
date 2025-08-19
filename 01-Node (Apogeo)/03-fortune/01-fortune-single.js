@@ -1,5 +1,3 @@
-//*** Legge una string e la scrive con un console.log
-
-const quote = "Any app taht can be written in JS, will eventually be written in JS. Jeff Atwood";
+const quote = "Il valore non serve a nulla quando non si accompagna alla giustizia, e se tutti gli uomini fossero giusti, non ci sarebbe bisogno di essere valorosi";
 
 console.log(quote);

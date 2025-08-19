@@ -5,6 +5,7 @@ const QUOTES_DIR = "./data";
 fs.readdir(QUOTES_DIR, (err, files) => {
     if (err) {
         console.log("Error while reading data directory");
+        process.exitCode = 1;
         return;
     }
 
@@ -14,6 +15,7 @@ fs.readdir(QUOTES_DIR, (err, files) => {
     fs.readFile(quoteFile, "utf-8", (err, data) => {
         if (err) {
             console.log("Error while reading a quote file");
+            process.exitCode = 1;
             return;
         }
         console.log(data);

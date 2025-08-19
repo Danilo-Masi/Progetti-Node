@@ -1,16 +1,15 @@
-//*** Fa tutto quello che faceva il file 08 però utilizzando le promises (quindi .then() e .catch()).
-
 const fs = require("fs/promises");
 
-const QUOTE_DIR = "./data";
+const QUOTES_DIR = "./data";
 
-fs.readdir(QUOTE_DIR, { withFileTypes: true })
+fs.readdir(QUOTES_DIR, { withFileTypes: true })
     .then((files) => {
-        const txtFiles = files.filter((f) => f.isFile() && f.name.endsWith(".txt"))
+        const txtFiles = files
+            .filter((f) => f.isFile() && f.name.endsWith(".txt"))
             .map((f) => f.name);
 
         const randomIdx = Math.floor(Math.random() * txtFiles.length);
-        const quoteFile = `${QUOTE_DIR}/${txtFiles[randomIdx]}`;
+        const quoteFile = `${QUOTES_DIR}/${txtFiles[randomIdx]}`;
 
         return fs.readFile(quoteFile, "utf-8");
     })
@@ -22,4 +21,3 @@ fs.readdir(QUOTE_DIR, { withFileTypes: true })
         process.exitCode = 1;
         return;
     });
-

@@ -1,9 +1,6 @@
-//*** Ha le stesse funzionalità del file 01, ma utilizzando gli apici ``
-//*** il testo viene stampato con la formattazione che desideriamo.
 const quote = `
-    Any app that can be written in JS
-    will eventually be written in JS
-                    --- Jeff Atwood
-`;
+    Il valore non serve a nulla quando non si accompagna alla giustizia, 
+    e se tutti gli uomini fossero giusti, non ci sarebbe bisogno di essere valorosi
+                                                                    --- Agesilao II`;
 
 console.log(quote);
