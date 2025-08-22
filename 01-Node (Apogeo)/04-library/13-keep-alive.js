@@ -3,9 +3,8 @@ const http = require("http");
 const host = "127.0.0.1";
 const port = "3000";
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.end(JSON.stringify({ message: "Benvenuto nella biblioteca HTTP" }));
+const server = http.createServer({ keepAliveTimeout: 50000 }, (req, res) => {
+    res.end("Keeping the connection alive!");
 });
 
 server.listen(port, host, () => {
