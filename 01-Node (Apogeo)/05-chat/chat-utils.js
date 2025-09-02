@@ -24,4 +24,19 @@ function colorGrey(str) {
     return `\x1b[97;100m${str}\x1b[0m`;
 }
 
-module.exports = { isSameSocket, broadcastMessage, getSocketsExcluding, removeCRLF, socketToId, colorGrey };
+function colorGreen(str) {
+    return `\x1b[97;42m${str}\x1b[0m`;
+}
+
+function parsePvtMessage(msg) {
+    const [_, receiver, ...rest] = msg.split(" ");
+    const pvtMsg = rest.join(" ");
+    return [receiver, pvtMsg];
+}
+
+function parseNickMessage(msg) {
+    const [_, name] = msg.split(" ");
+    return name;
+}
+
+module.exports = { isSameSocket, broadcastMessage, getSocketsExcluding, removeCRLF, socketToId, colorGrey, colorGreen, parseNickMessage, parsePvtMessage };
