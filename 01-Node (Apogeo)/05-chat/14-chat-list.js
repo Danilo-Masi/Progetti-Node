@@ -49,6 +49,10 @@ function processMessage(sock, message) {
         const receiverSock = getSocketByName(sockets, receiver);
         const preMsg = colorGreen(`(pvt msg from ${getName(sock)})`);
         receiverSock.write(`${preMsg} ${pvtMsg}\n`);
+    } else if (cleanMsg === "/list") {
+        const preMsg = colorGrey(`(only visible to you)`);
+        const usersString = sockets.map(getName).join(",");
+        sock.write(`${preMsg} Users are: ${usersString}\n`);
     } else {
         broadcastMessage(
             getSocketsExcluding(sockets, sock),

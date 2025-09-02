@@ -9,7 +9,7 @@ const {
     parseNickMessage,
     parsePvtMessage,
 } = require("./chat-utils");
-
+const LurkersDetector = require("./lurkes-detector");
 const port = 5050;
 const host = "127.0.0.1";
 
@@ -20,15 +20,19 @@ server.listen(port, host, () => {
 
 let sockets = [];
 let namesMap = {};
+let ld = new LurkersDetector(30);
+ld.on("lurker detected", (name) => {
+    console.log(`${name} is a lurker!`);
+    const sock = getSocketByName(sockets, name);
+    sock.resetAndDestroy();
+});
 
 function setName(sock, name) {
     namesMap[socketToId(sock)] = name;
 }
-
 function getName(sock) {
     return namesMap[socketToId(sock)];
 }
-
 function getSocketByName(sockets, name) {
     return sockets.find((s) => getName(s) === name);
 }
@@ -44,11 +48,16 @@ function processMessage(sock, message) {
             sockets,
             `${colorGrey(`${oldName} is now ${name}`)}\n`
         );
+        ld.renameUser(oldName, name);
     } else if (cleanMsg.startsWith("/pvt ")) {
         const [receiver, pvtMsg] = parsePvtMessage(cleanMsg);
         const receiverSock = getSocketByName(sockets, receiver);
         const preMsg = colorGreen(`(pvt msg from ${getName(sock)})`);
         receiverSock.write(`${preMsg} ${pvtMsg}\n`);
+    } else if (cleanMsg === "/list") {
+        const preMsg = colorGrey(`(only visible to you)`);
+        const usersString = sockets.map(getName).join(",");
+        sock.write(`${preMsg} Users are: ${usersString}\n`);
     } else {
         broadcastMessage(
             getSocketsExcluding(sockets, sock),
@@ -56,14 +65,28 @@ function processMessage(sock, message) {
         );
     }
 }
+const joinedMessage = (sock) =>
+    `${colorGrey(`${getName(sock)} joined the chat`)}\n`;
+const leftMessage = (sock) =>
+    `${colorGrey(`${getName(sock)} left the chat`)}\n`;
 
 server.on("connection", function (sock) {
     console.log(`CONNECTED:  ${socketToId(sock)}`);
 
     sockets.push(sock);
     setName(sock, socketToId(sock));
+    broadcastMessage(sockets, joinedMessage(sock));
+    ld.addUser(getName(sock));
 
     sock.on("data", function (data) {
+        ld.touchUser(getName(sock));
         processMessage(sock, data.toString());
+    });
+
+    sock.on("close", function () {
+        sockets = getSocketsExcluding(sockets, sock);
+        broadcastMessage(sockets, leftMessage(sock));
+        console.log("CLOSED: " + socketToId(sock));
+        ld.removeUser(getName(sock));
     });
 });

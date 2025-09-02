@@ -33,6 +33,10 @@ function getSocketByName(sockets, name) {
     return sockets.find((s) => getName(s) === name);
 }
 
+const joinedMessage = (sock) => `${colorGrey(`${getName(sock)} joined the chat`)}\n`;
+
+const leftMessage = (sock) => `${colorGrey(`${getName(sock)} left the chat`)}\n`;
+
 function processMessage(sock, message) {
     const cleanMsg = removeCRLF(message);
 
@@ -49,6 +53,10 @@ function processMessage(sock, message) {
         const receiverSock = getSocketByName(sockets, receiver);
         const preMsg = colorGreen(`(pvt msg from ${getName(sock)})`);
         receiverSock.write(`${preMsg} ${pvtMsg}\n`);
+    } else if (cleanMsg === "/list") {
+        const preMsg = colorGrey(`(only visible to you)`);
+        const usersString = sockets.map(getName).join(",");
+        sock.write(`${preMsg} Users are: ${usersString}\n`);
     } else {
         broadcastMessage(
             getSocketsExcluding(sockets, sock),
@@ -62,8 +70,15 @@ server.on("connection", function (sock) {
 
     sockets.push(sock);
     setName(sock, socketToId(sock));
+    broadcastMessage(sockets, joinedMessage(sock));
 
     sock.on("data", function (data) {
         processMessage(sock, data.toString());
+    });
+
+    sock.on("close", function () {
+        sockets = getSocketsExcluding(sockets, sock);
+        broadcastMessage(sockets, leftMessage(sock));
+        console.log("CLOSED: " + socketToId(sock));
     });
 });

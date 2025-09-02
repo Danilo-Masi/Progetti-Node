@@ -39,4 +39,14 @@ function parseNickMessage(msg) {
     return name;
 }
 
-module.exports = { isSameSocket, broadcastMessage, getSocketsExcluding, removeCRLF, socketToId, colorGrey, colorGreen, parseNickMessage, parsePvtMessage };
+module.exports = {
+    isSameSocket,
+    broadcastMessage,
+    getSocketsExcluding,
+    removeCRLF,
+    socketToId,
+    colorGrey,
+    colorGreen,
+    parseNickMessage,
+    parsePvtMessage,
+};
