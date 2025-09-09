@@ -1,14 +1,12 @@
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
-Rquested files/index.html file
-Rquested files/favicon.ico file
+127.0.0.1 - 2025-09-09T16:18:38.232Z "GET /index.html" 200 - 1ms
+127.0.0.1 - 2025-09-09T16:18:38.334Z "GET /favicon.ico" 200 - 1ms
+127.0.0.1 - 2025-09-09T16:18:53.708Z "GET /.well-known/appspecific/com.chrome.devtools.json" 404 - 1ms
+127.0.0.1 - 2025-09-09T16:19:02.359Z "GET /index.html" 200 - 2ms
+127.0.0.1 - 2025-09-09T16:19:02.947Z "GET /.well-known/appspecific/com.chrome.devtools.json" 404 - 0ms
+127.0.0.1 - 2025-09-09T16:19:03.478Z "GET /favicon.ico" 200 - 1ms
+127.0.0.1 - 2025-09-09T16:22:21.397Z "GET /" 404 - 6ms
+127.0.0.1 - 2025-09-09T16:36:51.791Z "GET /index.html" 200 - 16ms
+127.0.0.1 - 2025-09-09T16:36:52.224Z "GET /favicon.ico" 200 - 2ms
+127.0.0.1 - 2025-09-09T16:36:56.324Z "GET /kitchen-sink.html" 200 - 2ms
+127.0.0.1 - 2025-09-09T16:36:56.345Z "GET /style.css" 200 - 5ms
+127.0.0.1 - 2025-09-09T16:37:02.673Z "GET /selfie.jpg" 200 - 15ms
