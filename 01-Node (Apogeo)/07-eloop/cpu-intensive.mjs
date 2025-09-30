@@ -13,6 +13,19 @@ function isPrime(num) {
     return true;
 }
 
+function isPrimeRecursive(n, i, cb) {
+    if (i >= n) { return cb(true); }
+    if (n % i === 0) { return cb(false) }
+    setImmediate(isPrimeRecursive.bind(null, n, i + 1, cb));
+}
+
+function isPrimeAsync(num, cb) {
+    process.nextTick(() => {
+        if (num < 2) { return cb(false) }
+        isPrimeRecursive(num, 2, cb);
+    });
+}
+
 const PRIME_BIG = 39916801;
 
-export { isPrime, PRIME_BIG };
+export { isPrime, PRIME_BIG, isPrimeAsync };
