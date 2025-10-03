@@ -27,5 +27,6 @@ function isPrimeAsync(num, cb) {
 }
 
 const PRIME_BIG = 39916801;
+const PRIME_HUGE = 999999989;
 
-export { isPrime, PRIME_BIG, isPrimeAsync };
+export { isPrime, PRIME_BIG, isPrimeAsync, PRIME_HUGE };
