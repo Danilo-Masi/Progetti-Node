@@ -11,7 +11,7 @@ if (process.argv[2] === "child") {
     const interval = setInterval(() => {
         console.log(`${new Date().toISOString()} - isprime() is still running in another process...`);
     }, 1000);
-    const child = fork("22-self-fork.mjs", ["child"]);
+    const child = fork("21-self-fork.mjs", ["child"]);
     child.send(PRIME_HUGE);
     child.on("message", (result) => {
         console.log(`${PRIME_HUGE} is prime? ${result}`);
