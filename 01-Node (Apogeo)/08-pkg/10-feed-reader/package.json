@@ -1,5 +1,16 @@
 {
+  "name": "10-feed.reader",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.mjs",
+    "node-blog": "node app.mjs https://nodejs.org/en/feed/blog.xml",
+    "start-debug": "NODE_DEBUG=* node app.mjs",
+    "lint": "eslint *mjs"
+  },
   "dependencies": {
     "htmlparser2": "^10.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.37.0"
   }
 }
