@@ -22,7 +22,7 @@ app.get("/", (req, res, next) => {
                 description: apodInfo.explanation,
             });
         })
-        .catch(next);
+        .catch(next(err));
 });
 
 const firstApodDate = new Date("1995-06-16");
@@ -35,6 +35,7 @@ function validateDate(req, res, next) {
         next();
     }
 }
+
 app.get("/apod/:date", validateDate, (req, res, next) => {
     getApodByDate(req.params.date)
         .then((apodInfo) => {
