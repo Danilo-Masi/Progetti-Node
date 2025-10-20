@@ -31,9 +31,7 @@ router.post(
             const savingModels = generateFeedEntries(entries, s);
             let newCount = await waitAndCountFulfilled(savingModels);
             totalNewEntries += newCount;
-            req.log.info(
-                `Feed ${s.url}: found ${entries.length} and saved ${newCount} entries`
-            );
+            req.log.info(`Feed ${s.url}: found ${entries.length} and saved ${newCount} entries`);
         }
         res.json({ totalNewEntries });
     })
