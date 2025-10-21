@@ -2,7 +2,17 @@ import { Source } from "../models/Source.mjs";
 
 async function sourcesRoutes(fastify, opts) {
 
-    fastify.post("/", async (request, reply) => {
+    const postFeedsSchema = {
+        body: {
+            type: "object",
+            required: ["url"],
+            properties: {
+                url: { type: "string" }
+            }
+        }
+    };
+
+    fastify.post("/", { schema: postFeedsSchema }, async (request, reply) => {
         const source = new Source({ url: request.body.url });
         request.log.info(`Adding new Source: ${source}`);
         try {
@@ -20,7 +30,22 @@ async function sourcesRoutes(fastify, opts) {
         }
     });
 
-    fastify.get("/", async (request, reply) => {
+    const getSourcesSchema = {
+        response: {
+            200: {
+                type: "array",
+                items: {
+                    type: "object",
+                    properties: {
+                        _id: { type: "string" },
+                        url: { type: "string" }
+                    }
+                }
+            }
+        }
+    };
+
+    fastify.get("/", { schema: getSourcesSchema }, async (request, reply) => {
         const sources = await Source.find({}).exec();
         return sources;
     });
