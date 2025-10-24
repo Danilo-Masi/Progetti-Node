@@ -6,7 +6,10 @@ async function feedsRoutes(fastify, opts) {
         url: "/",
         schema: {
             querystring: {
-                sourceId: { type: "string" },
+                type: "object",
+                properties: {
+                    sourceId: { type: "string" },
+                },
             },
             response: {
                 200: {

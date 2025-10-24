@@ -12,6 +12,9 @@ import asyncUtils from "./plugins/async-utils.mjs";
 
 await mongoose.connect("mongodb://127.0.0.1:27017/feed-reader");
 
+fastify.addHook("onSend", async (request, reply, payload) => {
+    reply.header("server", "fastify");
+});
 fastify.register(compress);
 fastify.register(asyncUtils);
 fastify.register(feedsRoutes, { prefix: "/feeds" });
