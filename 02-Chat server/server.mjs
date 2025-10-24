@@ -10,11 +10,11 @@ let sockets = [];
 let nameMap = {};
 
 server.on("connection", function (sock) {
-    console.log(`CONNECTED: ${socketToId(sock)}`); // Da qui capiamo l'indiirizzo IP e la porta del nuovo utente connesso
-    sockets.push(sock); // Inserisce la nuova sock (nuovo utente connesso) nella lista delle sockets (lista degli utenti connessi)
-    setName(sockets, sock, socketToId(sock));
+    console.log(`CONNECTED: ${socketToId(sock)}`);
+    sockets.push(sock);
+    setName(nameMap, sock, socketToId(sock));
     sock.on("data", function (data) {
-        processMessage(sockets, sock, data.toString());
+        processMessage(nameMap, sock, data.toString());
     });
 });
 

@@ -10,7 +10,7 @@ function broadcastMessage(sockets, message) {
 
 // Funzione che compara le sock (utente che invia il messaggio) con gli utenti nella lista di utenti connessi (sockets)
 // e ritorna una mappa filtrata che esclude l'utente che invia il messaggio
-function getSocktesExcluding(sockets, sock) {
+function getSocketsExcluding(sockets, sock) {
     return sockets.filter((s) => !isSameSocket(s, sock));
 }
 
@@ -45,7 +45,7 @@ function processMessage(sockets, sock, message) {
         broadcastMessage(sockets, `${oldName} is now ${name}\n`);
     } else {
         broadcastMessage(
-            getSocktesExcluding(sockets, sock),
+            getSocketsExcluding(sockets, sock),
             `<${getName(sock)}> ${cleanMsg}\n`
         );
     }
