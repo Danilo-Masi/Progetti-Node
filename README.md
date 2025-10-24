@@ -5,3 +5,4 @@ Node Projects is a repository that gathers a series of applications developed wi
 |  Index   |  Project name  |
 |----------|----------------|
 |    01    |  Node (Apogeo) |
+|    02    |  Chat server   |   
