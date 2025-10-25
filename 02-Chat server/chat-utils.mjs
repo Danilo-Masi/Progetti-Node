@@ -19,36 +19,24 @@ function removeCRLF(str) {
     return str.replace(/[\r\n]+$/, "");
 }
 
-//
-function socketToId(sock) {
-    return `${sock.remoteAddress}:${sock.remotePort}`;
+function colorGrey(str) {
+    return `\x1b[97;100m${str}\x1b[0m`;
 }
 
-//
-function setName(namesMap, sock, name) {
-    namesMap[socketToId(sock)] = name;
+function colorGreen(str) {
+    return `\x1b[97;42m${str}\x1b[0m`;
+}
+// Funzione che divide il comando [/pvt] [name] [message] e fa ritornare solo [name] come receiver e [message] come pvtMsg
+function parsePvtMessage(msg) {
+    const [_, receiver, ...rest] = msg.split(" ");
+    const pvtMsg = rest.join(" ");
+    return [receiver, pvtMsg];
 }
 
-//
-function getName(namesMap, sock) {
-    return namesMap[socketToId(sock)];
+// Funzione che divide il comando [/nick] [name] e fa ritornare solo [name] come name
+function parseNickMessage(msg) {
+    const [_, name] = msg.split(" ");
+    return name;
 }
 
-// Funzione che stampa il messaggio inviato dall'utente su tutti i terminali connessi (tranne che proprio a colui che ha scritto il messaggio)
-function processMessage(sockets, sock, message) {
-    const cleanMsg = removeCRLF(message);
-
-    if (cleanMsg.startsWith("/nick ")) {
-        const oldName = getName(sock);
-        const [_, name] = cleanMsg.split(" ");
-        setName(sock, name);
-        broadcastMessage(sockets, `${oldName} is now ${name}\n`);
-    } else {
-        broadcastMessage(
-            getSocketsExcluding(sockets, sock),
-            `<${getName(sock)}> ${cleanMsg}\n`
-        );
-    }
-}
-
-export { processMessage, setName, getName, socketToId };
+export { broadcastMessage, getSocketsExcluding, removeCRLF, colorGrey, colorGreen, parsePvtMessage, parseNickMessage };
